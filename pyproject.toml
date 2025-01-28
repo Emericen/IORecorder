@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "IORecorder"
+version = "0.1.0"
+description = "A Python library for recording I/O interactions (keyboard, mouse, and screen)."
+authors = [
+    {name = "Emericen", email = "yuedilia@usc.edu"}
+]
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+keywords = ["input", "output", "recording", "I/O", "keyboard", "mouse", "screen"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+
+[project.urls]
+Homepage = "https://github.com/your_username/iorecorder"
+Documentation = "https://iorecorder.readthedocs.io"
+Source = "https://github.com/your_username/iorecorder"
+Issues = "https://github.com/your_username/iorecorder/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]

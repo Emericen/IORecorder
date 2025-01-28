@@ -1,0 +1,7 @@
+README.md
+pyproject.toml
+src/IORecorder.egg-info/PKG-INFO
+src/IORecorder.egg-info/SOURCES.txt
+src/IORecorder.egg-info/dependency_links.txt
+src/IORecorder.egg-info/top_level.txt
+src/iorecorder/__init__.py
