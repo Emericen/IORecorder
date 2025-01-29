@@ -168,7 +168,8 @@ class ScreenRecorder:
 
 
 class IORecorder:
-    def __init__(self):
+    def __init__(self, output_dir="."):
+        self.output_dir = output_dir
         self.session_dir = None
         self.screen_recorder = None
         self.mouse_recorder = None
@@ -177,8 +178,8 @@ class IORecorder:
     def _create_session_dir(self):
         # Create a directory name with timestamp
         timestamp = time.strftime("%Y%m%d_%H%M%S")
-        session_dir = f"recording_{timestamp}"
-
+        session_dir = os.path.join(self.output_dir, f"recording_{timestamp}")
+        
         # Create the directory
         os.makedirs(session_dir, exist_ok=True)
         return session_dir

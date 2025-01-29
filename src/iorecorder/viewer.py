@@ -1,10 +1,6 @@
 import csv
-import os
-import time
-from collections import defaultdict
-
-import moviepy.editor as mpe
 import numpy as np
+import moviepy.editor as mpe
 from PIL import Image, ImageDraw, ImageFont
 
 

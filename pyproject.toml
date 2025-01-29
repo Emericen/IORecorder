@@ -11,6 +11,13 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.7"
+dependencies = [
+    "moviepy==1.0.2",
+    "pynput==1.7.7",
+    "numpy==2.2.2",
+    "pyautogui==0.9.54",
+    "pillow==11.1.0",
+]
 license = {text = "MIT"}
 keywords = ["input", "output", "recording", "I/O", "keyboard", "mouse", "screen"]
 classifiers = [
@@ -26,10 +33,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your_username/iorecorder"
-Documentation = "https://iorecorder.readthedocs.io"
-Source = "https://github.com/your_username/iorecorder"
-Issues = "https://github.com/your_username/iorecorder/issues"
+Source = "https://github.com/Emericen/IORecorder"
+Issues = "https://github.com/Emericen/IORecorder/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
