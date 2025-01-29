@@ -37,4 +37,4 @@ Source = "https://github.com/Emericen/IORecorder"
 Issues = "https://github.com/Emericen/IORecorder/issues"
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["."]
