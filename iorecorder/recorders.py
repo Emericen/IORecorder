@@ -8,7 +8,6 @@ import pyautogui
 import pynput.mouse as M
 import pynput.keyboard as K
 
-
 class EventWriter:
     def __init__(self, csv_path: str, columns: list[str], frame_rate: int = 60):
         self._csv_file = open(csv_path, "w", newline="")
@@ -147,10 +146,15 @@ class ScreenRecorder:
                 f"-i :0.0 -c:v libx264 -r {self._frame_rate} {self._output_path}"
             )
         else:
-            cmd = (
-                f"ffmpeg -y -f gdigrab -draw_mouse 1 "
-                f"-i desktop -c:v libx264 -r {self._frame_rate} {self._output_path}"
-            )
+            # NOTE: leaving out non-Linux platforms for now. each platform has its own ffmpeg command, and capabilities for
+            # some is different. e.g. macOS's avfoundation can only capture 30fps top. 
+            #
+            # here's how to capture screen in other platforms:
+            #   - macOS / "Darwin"
+            #       ffmpeg -y -f avfoundation -capture_cursor 1 -i "1:none" -c:v libx264 -r 30 -preset ultrafast {self._output_path}
+            #   - Windows: 
+            #       ffmpeg -y -f gdigrab -draw_mouse 1 -i desktop -c:v libx264 -r 60 {self._output_path}
+            raise ValueError(f"Unsupported platform: {platform.system()}")
 
         self._process = subprocess.Popen(
             shlex.split(cmd),
@@ -214,7 +218,7 @@ if __name__ == "__main__":
     input("Press ENTER to start recording (screen + mouse + keyboard).")
     recorder.start()
     print("Recording for 10 seconds (or press CTRL+C to force stop).")
-    time.sleep(10)
+    time.sleep(30)
     print("Stopping now...")
     recorder.stop()
     print("Done.")
