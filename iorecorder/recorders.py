@@ -113,7 +113,7 @@ class KeyboardRecorder:
         )
         self.writer = EventWriter(
             csv_path=self.csv_path,
-            columns=["type", "timestamp", "x", "y", "button_or_key", "pressed"],
+            columns=["type", "x", "y", "button_or_key", "pressed"],
             frame_rate=self.frame_rate,
         )
         self.listener.start()
