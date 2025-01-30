@@ -2,6 +2,8 @@ import time
 import pandas as pd
 import pynput.mouse as M
 import pynput.keyboard as K
+from pynput.mouse import Button
+from pynput.keyboard import Key
 
 
 class InputPlayer:
@@ -35,16 +37,35 @@ class InputPlayer:
     def _handle_mouse_move(self, row):
         self._mouse_controller.move(row["d_x"], row["d_y"])
 
+    def _parse_button(self, button_str: str):
+        # Convert "Button.left" to Button.left
+        if button_str.startswith('Button.'):
+            button_name = button_str.replace('Button.', '')
+            return getattr(Button, button_name)
+        return button_str
+
+    def _parse_key(self, key_str: str):
+        # Convert "shift" to Key.shift
+        try:
+            return getattr(Key, key_str)
+        except AttributeError:
+            return key_str  # Return as-is for regular character keys
+
     def _handle_mouse_click(self, row):
-        button = row["button_or_key"]
+        button = self._parse_button(row["button_or_key"])
         if row["pressed"]:
-            self._mouse_controller.click(button)
+            self._mouse_controller.press(button)
         else:
             self._mouse_controller.release(button)
 
     def _handle_key_press(self, row):
-        key = row["button_or_key"]
+        key = self._parse_key(row["button_or_key"])
         if row["pressed"]:
             self._keyboard_controller.press(key)
         else:
             self._keyboard_controller.release(key)
+
+
+if __name__ == "__main__":
+    player = InputPlayer("input.csv")
+    player.play()
