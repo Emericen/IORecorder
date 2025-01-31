@@ -59,11 +59,11 @@ class InputPlayer:
             self._mouse_controller.release(button)
 
     def _handle_key_press(self, row):
-        key = self._parse_key(row["button_or_key"])
+        key_code = int(row["button_or_key"])
         if row["pressed"]:
-            self._keyboard_controller.press(key)
+            self._keyboard_controller.press(key_code)
         else:
-            self._keyboard_controller.release(key)
+            self._keyboard_controller.release(key_code)
 
 
 if __name__ == "__main__":

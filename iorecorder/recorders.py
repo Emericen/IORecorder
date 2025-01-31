@@ -127,8 +127,8 @@ class InputRecorder:
 
     def _key_to_string(self, key):
         if isinstance(key, K.Key):
-            return str(key).replace("Key.", "")
-        return getattr(key, "char", str(key))
+            return key.value.vk
+        return ord(key.char)
 
 
 class ScreenRecorder:
