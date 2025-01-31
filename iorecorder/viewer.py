@@ -2,6 +2,28 @@ import csv
 import numpy as np
 import moviepy.editor as mpe
 from PIL import Image, ImageDraw, ImageFont
+from pynput.keyboard import Key
+
+
+def _convert_key_to_display_string(event_type: str, key_str: str) -> str:
+    """Convert stored key codes to human readable format for display."""
+    if event_type != "keyboard":
+        return key_str
+        
+    try:
+        key_code = int(key_str)
+        try:
+            # First try to find special key name
+            key_str = next((k.name for k in Key if k.value.vk == key_code), None)
+            if key_str is None:
+                # If not a special key, convert to character
+                key_str = chr(key_code)
+        except ValueError:
+            key_str = f"<{key_code}>"
+    except ValueError:
+        pass  # Keep original string if not numeric
+    
+    return key_str
 
 
 def parse_events(input_csv):
@@ -10,12 +32,13 @@ def parse_events(input_csv):
     with open(input_csv, "r") as f:
         reader = csv.DictReader(f)
         for row in reader:
+            key_str = _convert_key_to_display_string(row["type"], row["button_or_key"])
             events.append((
                 float(row["timestamp"]),
                 row["type"],
                 int(float(row["x"])),
                 int(float(row["y"])),
-                row["button_or_key"],
+                key_str,
                 row["pressed"] == "True"
             ))
     return sorted(events, key=lambda e: e[0])
