@@ -14,8 +14,11 @@ class InputPlayer:
         self._speed_up_factor = speed_up_factor
 
         self._input_df["d_time"] = self._input_df["timestamp"].diff()
-        self._input_df["d_x"] = self._input_df["x"].diff()
-        self._input_df["d_y"] = self._input_df["y"].diff()
+        
+        # Calculate movement deltas only for mouse_move rows
+        move_mask = self._input_df["type"] == "mouse_move"
+        self._input_df.loc[move_mask, "d_x"] = self._input_df.loc[move_mask, "x"].diff()
+        self._input_df.loc[move_mask, "d_y"] = self._input_df.loc[move_mask, "y"].diff()
 
         self._action_handlers = {
             "mouse_move": self._handle_mouse_move,
