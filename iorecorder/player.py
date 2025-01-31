@@ -20,7 +20,7 @@ class InputPlayer:
         self._action_handlers = {
             "mouse_move": self._handle_mouse_move,
             "mouse_click": self._handle_mouse_click,
-            "key_press": self._handle_key_press,
+            "keyboard": self._handle_key_press,
         }
 
     def play(self):
