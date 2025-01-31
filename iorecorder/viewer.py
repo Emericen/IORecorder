@@ -4,41 +4,21 @@ import moviepy.editor as mpe
 from PIL import Image, ImageDraw, ImageFont
 
 
-def parse_events(mouse_csv, keyboard_csv):
-    """
-    Read your 2 CSV files (mouse_events.csv, keyboard_events.csv).
-    Return a single sorted list of (timestamp, event_type, x, y, key, pressed).
-    """
-
+def parse_events(input_csv):
+    """Read input_events.csv and return sorted list of (timestamp, event_type, x, y, key, pressed)."""
     events = []
-
-    # Mouse CSV
-    with open(mouse_csv, "r") as f:
+    with open(input_csv, "r") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            t = float(row["timestamp"])
-            e_type = row["type"]  # e.g. "mouse_move" or "mouse_click" or "mouse_scroll"
-            x = int(float(row["x"]))
-            y = int(float(row["y"]))
-            key = row["button_or_key"]  # e.g. "Button.left" or "scroll(1:-1)"
-            pressed = row["pressed"] == "True"
-            events.append((t, e_type, x, y, key, pressed))
-
-    # Keyboard CSV
-    with open(keyboard_csv, "r") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            t = float(row["timestamp"])
-            e_type = row["type"]  # normally "keyboard"
-            x = int(float(row["x"]))  # likely -1
-            y = int(float(row["y"]))  # likely -1
-            key = row["button_or_key"]  # e.g. "ctrl_l" or "A"
-            pressed = row["pressed"] == "True"
-            events.append((t, e_type, x, y, key, pressed))
-
-    # Sort by timestamp
-    events.sort(key=lambda e: e[0])
-    return events
+            events.append((
+                float(row["timestamp"]),
+                row["type"],
+                int(float(row["x"])),
+                int(float(row["y"])),
+                row["button_or_key"],
+                row["pressed"] == "True"
+            ))
+    return sorted(events, key=lambda e: e[0])
 
 
 def build_timeline(events):
@@ -177,38 +157,21 @@ def overlay_debug(frame, t, timeline):
     return np.array(out.convert("RGB"))
 
 
-def generate_debug_video(input_mp4, mouse_csv, keyboard_csv, output_mp4):
-    """
-    1. Parse events from CSV
-    2. Build timeline
-    3. Use moviepy to read input_mp4, overlay text each frame, write output_mp4
-    """
-    # parse + build
-    all_events = parse_events(mouse_csv, keyboard_csv)
-    timeline = build_timeline(all_events)
-
-    # load clip
+def generate_debug_video(input_mp4, input_csv, output_mp4):
+    """Generate debug overlay video showing mouse position and pressed keys."""
+    events = parse_events(input_csv)
     clip = mpe.VideoFileClip(input_mp4)
-
-    # define a function that receives get_frame(t) and returns a new frame
-    def annotate_frame(frame, t):
-        """frame is a (H,W,3) rgb array, t is time in seconds."""
-        return overlay_debug(frame, t, timeline)
-
-    # fl_image passes each frame + time to our function
-    annotated_clip = clip.fl(lambda gf, t: annotate_frame(gf(t), t))
-
-    # write out
+    
+    annotated_clip = clip.fl(lambda gf, t: overlay_debug(gf(t), t, build_timeline(events)))
     annotated_clip.write_videofile(output_mp4, codec="libx264", audio_codec="aac")
 
 
 if __name__ == "__main__":
     # Example usage:
     input_video = "recording_20250129_023959/screen.mp4"
-    mouse_csv = "recording_20250129_023959/mouse_events.csv"
-    keyboard_csv = "recording_20250129_023959/keyboard_events.csv"
+    input_csv = "recording_20250129_023959/input_events.csv"
     output_video = "recording_20250129_023959/debug_overlay.mp4"
 
-    generate_debug_video(input_video, mouse_csv, keyboard_csv, output_video)
+    generate_debug_video(input_video, input_csv, output_video)
     print(f"Done! Created {output_video} with debug overlay.")
 

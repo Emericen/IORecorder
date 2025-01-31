@@ -15,6 +15,7 @@ dependencies = [
     "moviepy==1.0.2",
     "pynput==1.7.7",
     "numpy==2.2.2",
+    "pandas==2.2.3",
     "pyautogui==0.9.54",
     "pillow==11.1.0",
 ]
